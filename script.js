@@ -3,7 +3,7 @@
 let userLatitude;
 let userLongitude;
 
-function getUserLocation() {
+const getUserLocation = () => {
 
     const handleSuccess = (location) => {
         userLatitude = location.coords.latitude;
@@ -32,6 +32,14 @@ function getUserLocation() {
         navigator.geolocation.getCurrentPosition(handleSuccess, handleError)
         :
         alert("Your browser doesn't support geolocation")
-}
+
+};
+
+const getAPIurl = (latitude, longitude) => {
+    console.log(`api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=db980b1e7e7f4209e7d4c6b9a782221d`);
+    return `api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=db980b1e7e7f4209e7d4c6b9a782221d`
+};
+
 
 window.addEventListener("load", getUserLocation);
+window.addEventListener("load", () => getAPIurl(userLatitude, userLongitude));
