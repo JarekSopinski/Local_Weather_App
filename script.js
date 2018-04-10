@@ -41,6 +41,16 @@ const handleGeolocationError = (error) => {
 
 };
 
+const displayData = (city, country, temperature, sky, icon) => {
+
+    cityDisplay.innerText = city;
+    countryDisplay.innerText = country;
+    temperatureDisplay.innerText = temperature;
+    skyDisplay.innerText = sky;
+    iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon}>`);
+
+};
+
 const handleAPICallSuccess = (data) => {
     console.log(data);
 
@@ -52,11 +62,7 @@ const handleAPICallSuccess = (data) => {
 
     console.log(city, country, temperature, sky);
 
-    cityDisplay.innerText = city;
-    countryDisplay.innerText = country;
-    temperatureDisplay.innerText = temperature;
-    skyDisplay.innerText = sky;
-    iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon}>`);
+    displayData(city, country, temperature, sky, icon)
 
 };
 
