@@ -41,6 +41,17 @@ const handleGeolocationError = (error) => {
 
 };
 
+const convertKelvinToCelsius = (kelvin) => {
+
+    const difference = 273.15;
+    return (kelvin - difference).toFixed(0)
+
+};
+
+const convertCelsiusToFahrenheit = (celsius) => {
+
+};
+
 const displayData = (city, country, temperature, sky, icon) => {
 
     cityDisplay.innerText = city;
@@ -56,7 +67,7 @@ const handleAPICallSuccess = (data) => {
 
     const city = data.name;
     const country = data.sys.country;
-    const temperature = data.main.temp;
+    const temperature = convertKelvinToCelsius(data.main.temp);
     const sky = data.weather[0].main;
     const icon = `${data.weather[0].icon}.png`;
 
