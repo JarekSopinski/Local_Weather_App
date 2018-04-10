@@ -40,8 +40,20 @@ const handleGeolocationError = (error) => {
 };
 
 const handleAPICallSuccess = (data) => {
-    console.log(data)
-    // do something with data
+    console.log(data);
+
+    const city = data.name;
+    const country = data.sys.country;
+    const temperature = data.main.temp;
+    const sky = data.weather[0].main;
+
+    console.log(city, country, temperature, sky);
+
+    cityDisplay.innerText = city;
+    countryDisplay.innerText = country;
+    temperatureDisplay.innerText = temperature;
+    skyDisplay.innerText = sky
+
 };
 
 const handleAPICallError = () => {
