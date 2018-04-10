@@ -2,6 +2,12 @@ const CONNECTION_ERROR_MSG = "An error occurred. Please check your internet conn
 const PERMISSION_DENIED_MSG = "This app requires your coordinates to run. Please allow geolocation in your browser.";
 const API_KEY = "db980b1e7e7f4209e7d4c6b9a782221d";
 
+const cityDisplay = document.getElementById("city");
+const countryDisplay = document.getElementById("country");
+const temperatureDisplay = document.getElementById("temperature");
+const skyDisplay = document.getElementById("sky");
+
+
 const getUserPosition = () => {
 
     return new Promise((resolve, reject) => {
