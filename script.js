@@ -1,7 +1,6 @@
-const userPosition = {
-    latitude: null,
-    longitude: null
-};
+const CONNECTION_ERROR_MSG = "An error occurred. Please check your internet connection and try again.";
+const PERMISSION_DENIED_MSG = "This app requires your coordinates to run. Please allow geolocation in your browser.";
+const API_KEY = "db980b1e7e7f4209e7d4c6b9a782221d";
 
 const getUserPosition = () => {
 
@@ -12,32 +11,57 @@ const getUserPosition = () => {
 };
 
 const handleGeolocationSuccess = (location) => {
-    userPosition.latitude = location.coords.latitude;
-    userPosition.longitude = location.coords.longitude;
-    console.log(userPosition);
+
+    const userLocation = {};
+    userLocation.latitude = location.coords.latitude;
+    userLocation.longitude = location.coords.longitude;
+    console.log(userLocation);
+    return userLocation
+
 };
 
 const handleGeolocationError = (error) => {
+
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            alert("This app requires your coordinates to run. Please allow geolocation in your browser.");
-            break;
-        case error.POSITION_UNAVAILABLE:
-            alert("Location information is unavailable");
-            break;
-        case error.TIMEOUT:
-            alert("The request to get user location timed out");
+            alert(PERMISSION_DENIED_MSG);
             break;
         default:
-            alert("An unknown error occurred.");
+            alert(CONNECTION_ERROR_MSG);
             break;
     }
+
+};
+
+const handleAPICallSuccess = (data) => {
+    console.log(data)
+    // do something with data
+};
+
+const handleAPICallError = () => {
+  alert(CONNECTION_ERROR_MSG)
+};
+
+const handleAPICall = (location) => {
+
+    const latitude = location.latitude;
+    const longitude = location.longitude;
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}`;
+
+    console.log(API_URL);
+
+    fetch(API_URL)
+        .then(response => response.json())
+        .then(data => handleAPICallSuccess(data))
+        .catch(error => handleAPICallError())
+
 };
 
 const getWeather = () => {
 
     getUserPosition()
-        .then(position => handleGeolocationSuccess(position))
+        .then(location => handleGeolocationSuccess(location))
+        .then(location => handleAPICall(location))
         .catch(error => handleGeolocationError(error))
 
 };
