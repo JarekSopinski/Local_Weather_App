@@ -8,6 +8,7 @@ const countryDisplay = document.getElementById("country");
 const temperatureDisplay = document.getElementById("temperature");
 const skyDisplay = document.getElementById("sky");
 const iconDisplay = document.getElementById("icon");
+const toggleTemperatureBtn = document.getElementById("toggleTemperatureBtn");
 
 
 const getUserPosition = () => {
@@ -49,8 +50,14 @@ const convertKelvinToCelsius = (kelvin) => {
 };
 
 const convertCelsiusToFahrenheit = (celsius) => {
-
+    return (celsius * (9/5)) + 32;
 };
+
+const convertFahrenheitToCelsius = (fahrenheit) => {
+    return (fahrenheit - 32) * 5/9;
+};
+
+//TODO: connect above to a button
 
 const displayData = (city, country, temperature, sky, icon) => {
 
