@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+h1, p {
+    text-align: center;
+    color: #E8E9EB;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+body {
+    background-color: #313638;
+}
+
+main {
+    margin: 50px 0;
+}
+
+main p {
+    font-size: 20px;
+}
+
+#temperatureUnit:hover {
+    cursor: pointer;
+    color: #427AA1;
+}
+
+img {
+    display: block;
+    margin: auto;
+}
+
+footer p {
+    font-size: 14px;
+}
+
+footer span:last-of-type {
+    color: #427AA1;
+}
+
+@media screen and (min-width: 576px) {
+    header {
+        margin-top: 20vh;
+    }
+}
