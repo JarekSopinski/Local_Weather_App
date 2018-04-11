@@ -72,6 +72,17 @@ const handleAPICallSuccess = (data) => {
 
 };
 
+const displayData = (weatherData) => {
+
+    const { city, country, sky, icon } = weatherData;
+
+    cityDisplay.innerText = city;
+    countryDisplay.innerText = country;
+    skyDisplay.innerText = sky;
+    iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon}>`);
+
+};
+
 const setInitialTemperatureState = (weatherData) => {
 
     temperatureState.currentlyDisplayedUnit = "celsius";
@@ -86,21 +97,13 @@ const setInitialTemperatureState = (weatherData) => {
 
 const toggleTemperatureUnit = () => {
 
-
-};
-
-const handleError = () => {
-    alert(CONNECTION_ERROR_MSG)
-};
-
-const displayData = (weatherData) => {
-
-    const { city, country, sky, icon } = weatherData;
-
-    cityDisplay.innerText = city;
-    countryDisplay.innerText = country;
-    skyDisplay.innerText = sky;
-    iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon}>`);
+    if (temperatureState.currentlyDisplayedUnit === "celsius") {
+        temperatureState.currentlyDisplayedUnit = "fahrenheit";
+        temperatureDisplay.innerText = temperatureState.fahrenheith
+    } else {
+        temperatureState.currentlyDisplayedUnit = "celsius";
+        temperatureDisplay.innerText = temperatureState.celsius
+    }
 
 };
 
@@ -113,4 +116,9 @@ const convertKelvinToFahrenheit = (kelvin) => {
     return Math.round((kelvin * 9/5) - 459.67)
 };
 
+const handleError = () => {
+    alert(CONNECTION_ERROR_MSG)
+};
+
 window.addEventListener("load", getUserLocation);
+toggleTemperatureBtn.addEventListener("click", toggleTemperatureUnit);
