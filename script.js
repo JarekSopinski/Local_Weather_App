@@ -6,9 +6,9 @@ const ICON_URL = "https://openweathermap.org/img/w/";
 const cityDisplay = document.getElementById("city");
 const countryDisplay = document.getElementById("country");
 const temperatureDisplay = document.getElementById("temperature");
+const temperatureUnitDisplay = document.getElementById("temperatureUnit");
 const skyDisplay = document.getElementById("sky");
 const iconDisplay = document.getElementById("icon");
-const toggleTemperatureBtn = document.getElementById("toggleTemperatureBtn");
 
 let temperatureState = {
     currentlyDisplayedUnit: null,
@@ -91,6 +91,7 @@ const setInitialTemperatureState = (weatherData) => {
     temperatureState.fahrenheith = convertKelvinToFahrenheit(weatherData.temperature);
 
     temperatureDisplay.innerText = temperatureState.celsius;
+    temperatureUnitDisplay.innerText = "C";
     console.log(temperatureState);
 
 };
@@ -99,10 +100,12 @@ const toggleTemperatureUnit = () => {
 
     if (temperatureState.currentlyDisplayedUnit === "celsius") {
         temperatureState.currentlyDisplayedUnit = "fahrenheit";
-        temperatureDisplay.innerText = temperatureState.fahrenheith
+        temperatureDisplay.innerText = temperatureState.fahrenheith;
+        temperatureUnitDisplay.innerText = "F";
     } else {
         temperatureState.currentlyDisplayedUnit = "celsius";
-        temperatureDisplay.innerText = temperatureState.celsius
+        temperatureDisplay.innerText = temperatureState.celsius;
+        temperatureUnitDisplay.innerText = "C";
     }
 
 };
@@ -121,4 +124,4 @@ const handleError = () => {
 };
 
 window.addEventListener("load", getUserLocation);
-toggleTemperatureBtn.addEventListener("click", toggleTemperatureUnit);
+temperatureUnitDisplay.addEventListener("click", toggleTemperatureUnit);
