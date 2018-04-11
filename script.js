@@ -16,11 +16,11 @@ let temperatureUnitState = "celsius";
 
 const getUserLocation = () => {
 
-        fetch(GEOLOCATION_API_URL)
-            .then(response => response.json())
-            .then(data => handleGeolocationSuccess(data))
-            .then(userLocation => getWeatherData(userLocation))
-            .catch(handleError)
+    fetch(GEOLOCATION_API_URL)
+        .then(response => response.json())
+        .then(data => handleGeolocationSuccess(data))
+        .then(userLocation => getWeatherData(userLocation))
+        .catch(handleError)
 
 };
 
@@ -52,15 +52,16 @@ const getWeatherData = (UserLocation) => {
 const handleAPICallSuccess = (data) => {
     console.log(data);
 
-    const city = data.name;
-    const country = data.sys.country;
-    const temperature = convertKelvinToCelsius(data.main.temp);
-    const sky = data.weather[0].main;
-    const icon = `${data.weather[0].icon}.png`;
+    const weatherData = {};
 
-    console.log(city, country, temperature, sky);
+    weatherData.city = data.name;
+    weatherData.country = data.sys.country;
+    weatherData.temperature = convertKelvinToCelsius(data.main.temp);
+    weatherData.sky = data.weather[0].main;
+    weatherData.icon = `${data.weather[0].icon}.png`;
 
-    displayData(city, country, temperature, sky, icon)
+    console.log(weatherData);
+    displayData(weatherData);
 
 };
 
@@ -86,7 +87,9 @@ const convertFahrenheitToCelsius = (fahrenheit) => {
 
 //TODO: connect above to a button
 
-const displayData = (city, country, temperature, sky, icon) => {
+const displayData = (weatherData) => {
+
+    const { city, country, temperature, sky, icon } = weatherData;
 
     cityDisplay.innerText = city;
     countryDisplay.innerText = country;
