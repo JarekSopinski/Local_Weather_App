@@ -1,7 +1,7 @@
 const CONNECTION_ERROR_MSG = "An error occurred. Please check your internet connection and try again.";
 const PERMISSION_DENIED_MSG = "This app requires your coordinates to run. Please allow geolocation in your browser.";
 const API_KEY = "db980b1e7e7f4209e7d4c6b9a782221d";
-const ICON_URL = "http://openweathermap.org/img/w/";
+const ICON_URL = "https://openweathermap.org/img/w/";
 
 const cityDisplay = document.getElementById("city");
 const countryDisplay = document.getElementById("country");
@@ -9,6 +9,9 @@ const temperatureDisplay = document.getElementById("temperature");
 const skyDisplay = document.getElementById("sky");
 const iconDisplay = document.getElementById("icon");
 const toggleTemperatureBtn = document.getElementById("toggleTemperatureBtn");
+
+let temperatureState;
+let temperatureUnitState = "celsius";
 
 
 const getUserPosition = () => {
@@ -46,6 +49,7 @@ const convertKelvinToCelsius = (kelvin) => {
 
     const difference = 273.15;
     return (kelvin - difference).toFixed(0)
+    //TODO: change temp state here
 
 };
 
