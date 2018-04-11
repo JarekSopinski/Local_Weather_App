@@ -10,8 +10,12 @@ const skyDisplay = document.getElementById("sky");
 const iconDisplay = document.getElementById("icon");
 const toggleTemperatureBtn = document.getElementById("toggleTemperatureBtn");
 
-let temperatureState;
-let temperatureUnitState = "celsius";
+let temperatureState = {
+    currentlyDisplayedUnit: null,
+    kelvin: null,
+    celsius: null,
+    fahrenheith: null
+};
 
 
 const getUserLocation = () => {
@@ -45,6 +49,7 @@ const getWeatherData = (UserLocation) => {
     fetch(API_URL)
         .then(response => response.json())
         .then(data => handleAPICallSuccess(data))
+        .then(weatherData => setInitialTemperatureState(weatherData))
         .catch(handleError)
 
 };
@@ -56,12 +61,31 @@ const handleAPICallSuccess = (data) => {
 
     weatherData.city = data.name;
     weatherData.country = data.sys.country;
-    weatherData.temperature = convertKelvinToCelsius(data.main.temp);
+    weatherData.temperature = data.main.temp;
     weatherData.sky = data.weather[0].main;
     weatherData.icon = `${data.weather[0].icon}.png`;
 
     console.log(weatherData);
     displayData(weatherData);
+
+    return weatherData
+
+};
+
+const setInitialTemperatureState = (weatherData) => {
+
+    temperatureState.currentlyDisplayedUnit = "celsius";
+    temperatureState.kelvin = weatherData.temperature;
+    temperatureState.celsius = convertKelvinToCelsius(weatherData.temperature);
+    temperatureState.fahrenheith = convertKelvinToFahrenheit(weatherData.temperature);
+
+    temperatureDisplay.innerText = temperatureState.celsius;
+    console.log(temperatureState);
+
+};
+
+const toggleTemperatureUnit = () => {
+
 
 };
 
@@ -69,34 +93,24 @@ const handleError = () => {
     alert(CONNECTION_ERROR_MSG)
 };
 
-const convertKelvinToCelsius = (kelvin) => {
-
-    const difference = 273.15;
-    return (kelvin - difference).toFixed(0)
-    //TODO: change temp state here
-
-};
-
-const convertCelsiusToFahrenheit = (celsius) => {
-    return (celsius * (9/5)) + 32;
-};
-
-const convertFahrenheitToCelsius = (fahrenheit) => {
-    return (fahrenheit - 32) * 5/9;
-};
-
-//TODO: connect above to a button
-
 const displayData = (weatherData) => {
 
-    const { city, country, temperature, sky, icon } = weatherData;
+    const { city, country, sky, icon } = weatherData;
 
     cityDisplay.innerText = city;
     countryDisplay.innerText = country;
-    temperatureDisplay.innerText = temperature;
     skyDisplay.innerText = sky;
     iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon}>`);
 
+};
+
+const convertKelvinToCelsius = (kelvin) => {
+    const difference = 273.15;
+    return Math.round((kelvin - difference))
+};
+
+const convertKelvinToFahrenheit = (kelvin) => {
+    return Math.round((kelvin * 9/5) - 459.67)
 };
 
 window.addEventListener("load", getUserLocation);
