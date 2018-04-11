@@ -14,7 +14,7 @@ let temperatureState = {
     currentlyDisplayedUnit: null,
     kelvin: null,
     celsius: null,
-    fahrenheith: null
+    fahrenheit: null
 };
 
 
@@ -33,7 +33,6 @@ const handleGeolocationSuccess = (data) => {
     const userLocation = {};
     userLocation.latitude = data.lat;
     userLocation.longitude = data.lon;
-    console.log(userLocation);
     return userLocation
 
 };
@@ -44,8 +43,6 @@ const getWeatherData = (UserLocation) => {
     const longitude = UserLocation.longitude;
     const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${WEATHER_API_KEY}`;
 
-    console.log(API_URL);
-
     fetch(API_URL)
         .then(response => response.json())
         .then(data => handleAPICallSuccess(data))
@@ -55,7 +52,6 @@ const getWeatherData = (UserLocation) => {
 };
 
 const handleAPICallSuccess = (data) => {
-    console.log(data);
 
     const weatherData = {};
 
@@ -65,9 +61,7 @@ const handleAPICallSuccess = (data) => {
     weatherData.sky = data.weather[0].main;
     weatherData.icon = `${data.weather[0].icon}.png`;
 
-    console.log(weatherData);
     displayData(weatherData);
-
     return weatherData
 
 };
@@ -79,7 +73,7 @@ const displayData = (weatherData) => {
     cityDisplay.innerText = city;
     countryDisplay.innerText = country;
     skyDisplay.innerText = sky;
-    iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon}>`);
+    iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon} alt=${sky}>`);
 
 };
 
@@ -88,11 +82,10 @@ const setInitialTemperatureState = (weatherData) => {
     temperatureState.currentlyDisplayedUnit = "celsius";
     temperatureState.kelvin = weatherData.temperature;
     temperatureState.celsius = convertKelvinToCelsius(weatherData.temperature);
-    temperatureState.fahrenheith = convertKelvinToFahrenheit(weatherData.temperature);
+    temperatureState.fahrenheit = convertKelvinToFahrenheit(weatherData.temperature);
 
     temperatureDisplay.innerText = temperatureState.celsius;
-    temperatureUnitDisplay.innerText = "C";
-    console.log(temperatureState);
+    temperatureUnitDisplay.innerText = "°C";
 
 };
 
@@ -100,12 +93,12 @@ const toggleTemperatureUnit = () => {
 
     if (temperatureState.currentlyDisplayedUnit === "celsius") {
         temperatureState.currentlyDisplayedUnit = "fahrenheit";
-        temperatureDisplay.innerText = temperatureState.fahrenheith;
-        temperatureUnitDisplay.innerText = "F";
+        temperatureDisplay.innerText = temperatureState.fahrenheit;
+        temperatureUnitDisplay.innerText = "°F";
     } else {
         temperatureState.currentlyDisplayedUnit = "celsius";
         temperatureDisplay.innerText = temperatureState.celsius;
-        temperatureUnitDisplay.innerText = "C";
+        temperatureUnitDisplay.innerText = "°C";
     }
 
 };
