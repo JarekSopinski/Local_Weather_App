@@ -1,5 +1,5 @@
+const PERMISSION_DENIED_MSG = "This app requires your coordinates to run. Please allow geolocation in your browser.";
 const CONNECTION_ERROR_MSG = "An error occurred. Please check your internet connection and try again.";
-const GEOLOCATION_API_URL = "https://ipinfo.io/json";
 const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather?";
 const WEATHER_API_KEY = "db980b1e7e7f4209e7d4c6b9a782221d";
 const ICON_URL = "https://openweathermap.org/img/w/";
@@ -11,6 +11,9 @@ const temperatureUnitDisplay = document.getElementById("temperatureUnit");
 const skyDisplay = document.getElementById("sky");
 const iconDisplay = document.getElementById("icon");
 
+const userLocation = {};
+const weatherData = {};
+
 let temperatureState = {
     currentlyDisplayedUnit: null,
     kelvin: null,
@@ -18,26 +21,27 @@ let temperatureState = {
     fahrenheit: null
 };
 
+const runBrowserGeolocation = () => {
 
-const getUserLocation = () => {
-
-    fetch(GEOLOCATION_API_URL)
-        .then(response => response.json())
-        .then(data => handleGeolocationSuccess(data))
-        .then(userLocation => getWeatherData(userLocation))
-        .catch(handleError)
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    })
 
 };
 
-const handleGeolocationSuccess = (data) => {
+const getUserLocation = () => {
 
-    cityDisplay.innerText = data.city;
-    countryDisplay.innerText = data.country;
+    runBrowserGeolocation()
+        .then(data => passDataToUserLocationObject(data))
+        .then(userLocation => getWeatherData(userLocation))
+        .catch(error => handleError(error))
 
-    const coordinates = data.loc.split(",");
-    const userLocation = {};
-    userLocation.latitude = coordinates[0];
-    userLocation.longitude = coordinates[1];
+};
+
+const passDataToUserLocationObject = (data) => {
+
+    userLocation.latitude = data.coords.latitude;
+    userLocation.longitude = data.coords.longitude;
     return userLocation
 
 };
@@ -50,16 +54,15 @@ const getWeatherData = (UserLocation) => {
 
     fetch(API_URL)
         .then(response => response.json())
-        .then(data => handleAPICallSuccess(data))
+        .then(data => passDataToWeatherDataObject(data))
         .then(weatherData => setInitialTemperatureState(weatherData))
-        .catch(handleError)
+        .catch(error => handleError(error))
 
 };
 
-const handleAPICallSuccess = (data) => {
+const passDataToWeatherDataObject = (data) => {
 
-    const weatherData = {};
-
+    weatherData.city = data.name;
     weatherData.country = data.sys.country;
     weatherData.temperature = data.main.temp;
     weatherData.sky = data.weather[0].main;
@@ -72,8 +75,10 @@ const handleAPICallSuccess = (data) => {
 
 const displayData = (weatherData) => {
 
-    const { sky, icon } = weatherData;
+    const { city, country, sky, icon } = weatherData;
 
+    cityDisplay.innerText = city;
+    countryDisplay.innerText = country;
     skyDisplay.innerText = sky;
     iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon} alt=${sky}>`);
 
@@ -114,8 +119,17 @@ const convertKelvinToFahrenheit = (kelvin) => {
     return Math.round((kelvin * 9/5) - 459.67)
 };
 
-const handleError = () => {
-    alert(CONNECTION_ERROR_MSG)
+const handleError = (error) => {
+
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert(PERMISSION_DENIED_MSG);
+            break;
+        default:
+            alert(CONNECTION_ERROR_MSG);
+            break;
+    }
+
 };
 
 window.addEventListener("load", getUserLocation);
