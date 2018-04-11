@@ -1,5 +1,6 @@
 const CONNECTION_ERROR_MSG = "An error occurred. Please check your internet connection and try again.";
-const GEOLOCATION_API_URL = "http://ip-api.com/json";
+const GEOLOCATION_API_URL = "https://ipinfo.io/json";
+const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather?";
 const WEATHER_API_KEY = "db980b1e7e7f4209e7d4c6b9a782221d";
 const ICON_URL = "https://openweathermap.org/img/w/";
 
@@ -30,9 +31,10 @@ const getUserLocation = () => {
 
 const handleGeolocationSuccess = (data) => {
 
+    const coordinates = data.loc.split(",");
     const userLocation = {};
-    userLocation.latitude = data.lat;
-    userLocation.longitude = data.lon;
+    userLocation.latitude = coordinates[0];
+    userLocation.longitude = coordinates[1];
     return userLocation
 
 };
@@ -41,7 +43,7 @@ const getWeatherData = (UserLocation) => {
 
     const latitude = UserLocation.latitude;
     const longitude = UserLocation.longitude;
-    const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${WEATHER_API_KEY}`;
+    const API_URL = `${WEATHER_API_URL}lat=${latitude}&lon=${longitude}&APPID=${WEATHER_API_KEY}`;
 
     fetch(API_URL)
         .then(response => response.json())
