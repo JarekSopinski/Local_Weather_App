@@ -31,6 +31,9 @@ const getUserLocation = () => {
 
 const handleGeolocationSuccess = (data) => {
 
+    cityDisplay.innerText = data.city;
+    countryDisplay.innerText = data.country;
+
     const coordinates = data.loc.split(",");
     const userLocation = {};
     userLocation.latitude = coordinates[0];
@@ -57,7 +60,6 @@ const handleAPICallSuccess = (data) => {
 
     const weatherData = {};
 
-    weatherData.city = data.name;
     weatherData.country = data.sys.country;
     weatherData.temperature = data.main.temp;
     weatherData.sky = data.weather[0].main;
@@ -70,10 +72,8 @@ const handleAPICallSuccess = (data) => {
 
 const displayData = (weatherData) => {
 
-    const { city, country, sky, icon } = weatherData;
+    const { sky, icon } = weatherData;
 
-    cityDisplay.innerText = city;
-    countryDisplay.innerText = country;
     skyDisplay.innerText = sky;
     iconDisplay.insertAdjacentHTML("afterbegin", `<img src=${ICON_URL}${icon} alt=${sky}>`);
 
