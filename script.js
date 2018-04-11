@@ -1,6 +1,6 @@
 const CONNECTION_ERROR_MSG = "An error occurred. Please check your internet connection and try again.";
-const PERMISSION_DENIED_MSG = "This app requires your coordinates to run. Please allow geolocation in your browser.";
-const API_KEY = "db980b1e7e7f4209e7d4c6b9a782221d";
+const GEOLOCATION_API_URL = "http://ip-api.com/json";
+const WEATHER_API_KEY = "db980b1e7e7f4209e7d4c6b9a782221d";
 const ICON_URL = "https://openweathermap.org/img/w/";
 
 const cityDisplay = document.getElementById("city");
@@ -14,35 +14,58 @@ let temperatureState;
 let temperatureUnitState = "celsius";
 
 
-const getUserPosition = () => {
+const getUserLocation = () => {
 
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-    })
+        fetch(GEOLOCATION_API_URL)
+            .then(response => response.json())
+            .then(data => handleGeolocationSuccess(data))
+            .then(userLocation => getWeatherData(userLocation))
+            .catch(handleError)
 
 };
 
-const handleGeolocationSuccess = (location) => {
+const handleGeolocationSuccess = (data) => {
 
     const userLocation = {};
-    userLocation.latitude = location.coords.latitude;
-    userLocation.longitude = location.coords.longitude;
+    userLocation.latitude = data.lat;
+    userLocation.longitude = data.lon;
     console.log(userLocation);
     return userLocation
 
 };
 
-const handleGeolocationError = (error) => {
+const getWeatherData = (UserLocation) => {
 
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            alert(PERMISSION_DENIED_MSG);
-            break;
-        default:
-            alert(CONNECTION_ERROR_MSG);
-            break;
-    }
+    const latitude = UserLocation.latitude;
+    const longitude = UserLocation.longitude;
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${WEATHER_API_KEY}`;
 
+    console.log(API_URL);
+
+    fetch(API_URL)
+        .then(response => response.json())
+        .then(data => handleAPICallSuccess(data))
+        .catch(handleError)
+
+};
+
+const handleAPICallSuccess = (data) => {
+    console.log(data);
+
+    const city = data.name;
+    const country = data.sys.country;
+    const temperature = convertKelvinToCelsius(data.main.temp);
+    const sky = data.weather[0].main;
+    const icon = `${data.weather[0].icon}.png`;
+
+    console.log(city, country, temperature, sky);
+
+    displayData(city, country, temperature, sky, icon)
+
+};
+
+const handleError = () => {
+    alert(CONNECTION_ERROR_MSG)
 };
 
 const convertKelvinToCelsius = (kelvin) => {
@@ -73,47 +96,4 @@ const displayData = (city, country, temperature, sky, icon) => {
 
 };
 
-const handleAPICallSuccess = (data) => {
-    console.log(data);
-
-    const city = data.name;
-    const country = data.sys.country;
-    const temperature = convertKelvinToCelsius(data.main.temp);
-    const sky = data.weather[0].main;
-    const icon = `${data.weather[0].icon}.png`;
-
-    console.log(city, country, temperature, sky);
-
-    displayData(city, country, temperature, sky, icon)
-
-};
-
-const handleAPICallError = () => {
-  alert(CONNECTION_ERROR_MSG)
-};
-
-const handleAPICall = (location) => {
-
-    const latitude = location.latitude;
-    const longitude = location.longitude;
-    const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}`;
-
-    console.log(API_URL);
-
-    fetch(API_URL)
-        .then(response => response.json())
-        .then(data => handleAPICallSuccess(data))
-        .catch(error => handleAPICallError())
-
-};
-
-const getWeather = () => {
-
-    getUserPosition()
-        .then(location => handleGeolocationSuccess(location))
-        .then(location => handleAPICall(location))
-        .catch(error => handleGeolocationError(error))
-
-};
-
-window.addEventListener("load", getWeather);
+window.addEventListener("load", getUserLocation);
