@@ -13,13 +13,7 @@ const iconDisplay = document.getElementById("icon");
 
 const userLocation = {};
 const weatherData = {};
-
-let temperatureState = {
-    currentlyDisplayedUnit: null,
-    kelvin: null,
-    celsius: null,
-    fahrenheit: null
-};
+const temperatureState = {};
 
 const runBrowserGeolocation = () => {
 
