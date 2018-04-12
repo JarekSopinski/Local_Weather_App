@@ -16,7 +16,7 @@ A simple app showing current weather in user's location. User can toggle between
 
 ### About
 
-This project created during FreeCodeCamp front-end course. It's a [task from Intermediate Front End Development Projects section.](https://www.freecodecamp.org/challenges/show-the-local-weather). Style was inspired by [FCC sample](https://codepen.io/freeCodeCamp/full/bELRjV).
+This project was created during FreeCodeCamp front-end course. It's a [task from Intermediate Front End Development Projects section](https://www.freecodecamp.org/challenges/show-the-local-weather). Style was inspired by [FCC sample](https://codepen.io/freeCodeCamp/full/bELRjV).
 
 ---
 
